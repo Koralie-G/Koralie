@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koralie • Se retrouver & s'épanouir</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #C9A098;
+    --rose-light: #E8D5D0;
+    --rose-pale: #F5EDEB;
+    --sage: #8A9E8C;
+    --sage-light: #B8C9B9;
+    --sage-pale: #EDF2ED;
+    --cream: #FAF7F4;
+    --warm-white: #FFFDF9;
+    --dark: #2C2420;
+    --dark-mid: #4A3F3A;
+    --mid: #7A6E69;
+    --gold: #C4A882;
+    --gold-light: #E8D9C0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Lora', serif;
+    background: var(--cream);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--rose-pale) 0%, var(--cream) 45%, var(--sage-pale) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,160,152,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(138,158,140,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-ornament {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    color: var(--rose);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .avatar-wrap {
+    position: relative;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .avatar-ring {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 2px solid var(--rose);
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--rose-light), var(--sage-light));
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    color: white;
+    font-weight: 300;
+    box-shadow: 0 8px 32px rgba(201,160,152,0.3);
+  }
+
+  .avatar-butterfly {
+    position: absolute;
+    bottom: -4px; right: -4px;
+    font-size: 22px;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 9vw, 58px);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--dark);
+    text-align: center;
+    line-height: 1.1;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .hero-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(13px, 3.5vw, 16px);
+    font-style: italic;
+    color: var(--mid);
+    text-align: center;
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .hero-signature {
+    margin-top: 28px;
+    font-family: 'Lora', serif;
+    font-size: clamp(15px, 4vw, 18px);
+    color: var(--dark-mid);
+    text-align: center;
+    line-height: 1.7;
+    max-width: 340px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+
+  .hero-signature strong {
+    color: var(--rose);
+    font-weight: 500;
+  }
+
+  .hero-divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    margin: 24px auto;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.1s forwards;
+  }
+
+  .hero-pills {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    margin-top: 4px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+
+  .pill {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    padding: 6px 16px;
+    border: 1px solid var(--rose-light);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.6);
+  }
+
+  /* ── NAV LINKS ── */
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 40px 24px;
+    max-width: 420px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.4s forwards;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    background: var(--warm-white);
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--dark);
+    border: 1px solid rgba(201,160,152,0.2);
+    box-shadow: 0 2px 12px rgba(44,36,32,0.06);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--rose);
+    border-radius: 0 2px 2px 0;
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
+
+  .nav-btn:hover::before { transform: scaleY(1); }
+
+  .nav-btn:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(201,160,152,0.2);
+    border-color: rgba(201,160,152,0.4);
+  }
+
+  .nav-btn-icon {
+    font-size: 22px;
+    width: 36px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .nav-btn-text { flex: 1; }
+
+  .nav-btn-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--dark);
+    display: block;
+  }
+
+  .nav-btn-sub {
+    font-family: 'Lora', serif;
+    font-size: 12px;
+    color: var(--mid);
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .nav-btn-arrow {
+    color: var(--rose);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  .section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 7vw, 38px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--dark);
+    margin-bottom: 20px;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .section-text {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--dark-mid);
+  }
+
+  .section-divider {
+    width: 50px; height: 1px;
+    background: linear-gradient(90deg, var(--rose), var(--sage));
+    margin: 32px 0;
+  }
+
+  /* ── TRANSFORMATION ── */
+  .transform-bg {
+    background: linear-gradient(160deg, var(--rose-pale), var(--warm-white));
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .stat-card {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    border: 1px solid var(--rose-light);
+    box-shadow: 0 2px 12px rgba(201,160,152,0.1);
+  }
+
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--rose);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Lora', serif;
+    font-size: 11px;
+    color: var(--mid);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  .quote-block {
+    background: white;
+    border-left: 3px solid var(--rose);
+    border-radius: 0 16px 16px 0;
+    padding: 20px 20px 20px 24px;
+    margin: 24px 0;
+    box-shadow: 0 2px 16px rgba(201,160,152,0.08);
+  }
+
+  .quote-block p {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--dark);
+  }
+
+  /* ── MÉTHODE EBR ── */
+  .ebr-bg {
+    background: linear-gradient(160deg, var(--sage-pale), var(--cream));
+  }
+
+  .ebr-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .ebr-logo {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--sage), var(--sage-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 14px rgba(138,158,140,0.3);
+  }
+
+  .ebr-title-wrap {}
+  .ebr-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  .ebr-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--dark);
+    line-height: 1.1;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .step-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(138,158,140,0.2);
+    box-shadow: 0 2px 12px rgba(44,36,32,0.05);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .step-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content {}
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 2px;
+  }
+
+  .step-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    color: var(--mid);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* ── ROUTINES ── */
+  .routine-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 24px;
+  }
+
+  .routine-card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px 16px;
+    border: 1px solid var(--rose-light);
+    box-shadow: 0 2px 10px rgba(44,36,32,0.04);
+    text-align: center;
+  }
+
+  .routine-card.full { grid-column: 1 / -1; }
+
+  .routine-emoji { font-size: 26px; margin-bottom: 8px; }
+
+  .routine-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .routine-desc {
+    font-family: 'Lora', serif;
+    font-size: 12px;
+    color: var(--mid);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── REJOINDRE ── */
+  .join-bg {
+    background: linear-gradient(160deg, var(--dark) 0%, #3d302a 100%);
+  }
+
+  .join-bg .section-label { color: var(--gold); }
+  .join-bg .section-title { color: white; }
+  .join-bg .section-title em { color: var(--gold); }
+  .join-bg .section-text { color: rgba(255,255,255,0.75); }
+  .join-bg .section-divider { background: linear-gradient(90deg, var(--gold), var(--rose)); }
+
+  .join-values {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .join-value {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .join-value-icon { font-size: 20px; }
+
+  .join-value-text {
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+  }
+
+  /* ── CTA BUTTONS ── */
+  .cta-primary {
+    display: block;
+    width: 100%;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, var(--rose), #B8867C);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 0 6px 24px rgba(201,160,152,0.4);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+  }
+
+  .cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(201,160,152,0.5);
+  }
+
+  .cta-secondary {
+    display: block;
+    width: 100%;
+    padding: 16px 24px;
+    background: transparent;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 14px;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    font-style: italic;
+    border: 1px solid rgba(255,255,255,0.25);
+    transition: all 0.3s ease;
+    margin-top: 12px;
+  }
+
+  .cta-secondary:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.4);
+  }
+
+  .cta-sage {
+    display: block;
+    width: 100%;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, var(--sage), #6E8870);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 6px 24px rgba(138,158,140,0.35);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+  }
+
+  .cta-sage:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(138,158,140,0.45);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 24px 48px;
+    background: var(--cream);
+  }
+
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--dark);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-name em { color: var(--rose); font-style: italic; }
+
+  .footer-sub {
+    font-family: 'Lora', serif;
+    font-size: 12px;
+    color: var(--mid);
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  .footer-divider {
+    width: 40px; height: 1px;
+    background: var(--rose-light);
+    margin: 20px auto;
+  }
+
+  .footer-butterfly {
+    font-size: 20px;
+    opacity: 0.5;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-ornament">✦ Bienvenue ✦</div>
+
+  <div class="avatar-wrap">
+    <div class="avatar-ring">K</div>
+    <span class="avatar-butterfly">🦋</span>
+  </div>
+
+  <h1 class="hero-name">Koralie<br><em>Gouverneur</em></h1>
+  <p class="hero-tagline">Se retrouver & s'épanouir</p>
+
+  <div class="hero-divider"></div>
+
+  <p class="hero-signature">
+    Maman X3 • Empathique & sans filtre 🌿<br>
+    J'ai pas retrouvé qui j'étais —<br>
+    <strong>j'ai réveillé celle que je devais devenir</strong>
+  </p>
+
+  <div class="hero-pills" style="margin-top: 24px;">
+    <span class="pill">Transformation</span>
+    <span class="pill">Bien-être</span>
+    <span class="pill">Leadership</span>
+  </div>
+</section>
+
+<!-- NAV LINKS -->
+<nav class="nav-links reveal">
+
+  <a href="#mon-histoire" class="nav-btn">
+    <span class="nav-btn-icon">🌿</span>
+    <span class="nav-btn-text">
+      <span class="nav-btn-title">Mon histoire</span>
+      <span class="nav-btn-sub">Du pyjama à la scène — sans filtre</span>
+    </span>
+    <span class="nav-btn-arrow">→</span>
+  </a>
+
+  <a href="#programmes" class="nav-btn">
+    <span class="nav-btn-icon">✨</span>
+    <span class="nav-btn-text">
+      <span class="nav-btn-title">Mes programmes minceur</span>
+      <span class="nav-btn-sub">Déblocage • Détox • Transformation</span>
+    </span>
+    <span class="nav-btn-arrow">→</span>
+  </a>
+
+  <a href="#routines" class="nav-btn">
+    <span class="nav-btn-icon">☀️</span>
+    <span class="nav-btn-text">
+      <span class="nav-btn-title">Mes routines</span>
+      <span class="nav-btn-sub">Matin, peau, maquillage en 10 min</span>
+    </span>
+    <span class="nav-btn-arrow">→</span>
+  </a>
+
+  <a href="#rejoindre" class="nav-btn">
+    <span class="nav-btn-icon">🎤</span>
+    <span class="nav-btn-text">
+      <span class="nav-btn-title">Rejoindre l'aventure</span>
+      <span class="nav-btn-sub">Construis ta vie à voix haute</span>
+    </span>
+    <span class="nav-btn-arrow">→</span>
+  </a>
+
+</nav>
+
+<!-- MON HISTOIRE -->
+<section class="section transform-bg" id="mon-histoire">
+  <div class="reveal">
+    <span class="section-label">Mon histoire</span>
+    <h2 class="section-title">J'ai pas retrouvé<br>qui j'étais —<br><em>je l'ai réveillée</em></h2>
+
+    <p class="section-text">
+      Pendant longtemps, je me suis sentie complètement bloquée. Fatigue, fringales, manque de contrôle. Cette sensation de ne plus me reconnaître dans mon propre corps.
+    </p>
+
+    <div class="section-divider"></div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number">-11</div>
+        <div class="stat-label">kilos perdus<br>sans régime</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">enfants &<br>une nouvelle vie</div>
+      </div>
+    </div>
+
+    <p class="section-text">
+      Ce n'est pas une question de volonté. C'est une question de stratégie. Le jour où j'ai compris ça, tout a changé. Ce n'est pas mon corps que j'ai transformé en premier — c'est ma tête.
+    </p>
+
+    <div class="quote-block" style="margin-top: 24px;">
+      <p>"Du pyjama à la scène, je construis ma vie à voix haute. Et toi, elle attend quoi ta femme intérieure ?"</p>
+    </div>
+
+    <a href="#programmes" class="cta-primary" style="margin-top: 24px;">Commencer ma transformation →</a>
+  </div>
+</section>
+
+<!-- PROGRAMMES -->
+<section class="section ebr-bg" id="programmes">
+  <div class="reveal">
+    <span class="section-label">Mes programmes</span>
+    <h2 class="section-title">Ton parcours<br><em>commence ici</em></h2>
+
+    <p class="section-text">
+      Ton corps ne fonctionne pas au hasard. Quand il bloque, ce n'est pas un manque de volonté — c'est un déséquilibre. Choisis le programme qui correspond à TON corps, TON rythme et TES blocages.
+    </p>
+
+    <div class="section-divider"></div>
+
+    <div class="ebr-header">
+      <div class="ebr-logo">🦋</div>
+      <div class="ebr-title-wrap">
+        <div class="ebr-label">Ma méthode</div>
+        <div class="ebr-name">Élite Butterfly Rising</div>
+      </div>
+    </div>
+
+    <div class="steps">
+
+      <div class="step-card">
+        <div class="step-icon">🌿</div>
+        <div class="step-content">
+          <div class="step-num">Étape 1</div>
+          <div class="step-name">Reset Déblocage</div>
+          <div class="step-desc">Rééquilibrer ton corps, apaiser le stress et sortir du mode blocage. Tout commence par le bon ordre.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">💧</div>
+        <div class="step-content">
+          <div class="step-num">Étape 2</div>
+          <div class="step-name">Pure Détox</div>
+          <div class="step-desc">Nettoyer en profondeur, alléger ton corps et accélérer les premiers résultats visibles.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon">🔥</div>
+        <div class="step-content">
+          <div class="step-num">Étape 3</div>
+          <div class="step-name">Activation & Transformation</div>
+          <div class="step-desc">Activer la combustion, booster ton métabolisme et transformer ta silhouette durablement.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <a href="https://wa.me/TONNUM" class="cta-sage">Choisir mon programme → 🌿</a>
+  </div>
+</section>
+
+<!-- ROUTINES -->
+<section class="section" id="routines">
+  <div class="reveal">
+    <span class="section-label">Mes routines</span>
+    <h2 class="section-title">La vraie vie<br><em>sans filtre</em></h2>
+
+    <p class="section-text">
+      Maman de 3, partenaire souvent absent, vie rurale… Je partage ce qui marche vraiment — pas la version parfaite, la version honnête.
+    </p>
+
+    <div class="routine-grid">
+
+      <div class="routine-card">
+        <div class="routine-emoji">🌅</div>
+        <div class="routine-name">Routine matin</div>
+        <div class="routine-desc">Commencer la journée avec intention, même en 15 min</div>
+      </div>
+
+      <div class="routine-card">
+        <div class="routine-emoji">✨</div>
+        <div class="routine-name">Routine peau</div>
+        <div class="routine-desc">Prendre soin de soi sans se compliquer la vie</div>
+      </div>
+
+      <div class="routine-card full">
+        <div class="routine-emoji">💄</div>
+        <div class="routine-name">Maquillage en 10 minutes chrono</div>
+        <div class="routine-desc">La routine maman pressée qui donne l'impression d'avoir tout son temps</div>
+      </div>
+
+    </div>
+
+    <a href="https://instagram.com/koralie.gouverneur" class="cta-primary" style="background: linear-gradient(135deg, var(--gold), #B8967A);">
+      Suivre mes routines sur Instagram →
+    </a>
+  </div>
+</section>
+
+<!-- REJOINDRE -->
+<section class="section join-bg" id="rejoindre">
+  <div class="reveal">
+    <span class="section-label">L'aventure EBR</span>
+    <h2 class="section-title">Construis ta vie<br><em>à voix haute</em></h2>
+
+    <p class="section-text">
+      J'ai commencé là où tu es peut-être aujourd'hui. Aujourd'hui je suis Directrice, j'ai une équipe, et je construis ma liberté financière — tout en étant maman, en vivant à la campagne, en étant moi.
+    </p>
+
+    <div class="section-divider"></div>
+
+    <div class="join-values">
+      <div class="join-value">
+        <span class="join-value-icon">🦋</span>
+        <span class="join-value-text">Une communauté de femmes qui s'élèvent ensemble</span>
+      </div>
+      <div class="join-value">
+        <span class="join-value-icon">🌿</span>
+        <span class="join-value-text">Un accompagnement personnalisé — t'es pas seule</span>
+      </div>
+      <div class="join-value">
+        <span class="join-value-icon">🎤</span>
+        <span class="join-value-text">Une activité à ton rythme, depuis chez toi</span>
+      </div>
+      <div class="join-value">
+        <span class="join-value-icon">✨</span>
+        <span class="join-value-text">La liberté financière comme horizon, pas comme rêve</span>
+      </div>
+    </div>
+
+    <a href="https://wa.me/TONNUM" class="cta-primary">Échanger avec Koralie → 🎤</a>
+    <a href="https://instagram.com/koralie.gouverneur" class="cta-secondary">Me suivre sur Instagram</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Koralie <em>Gouverneur</em></div>
+  <div class="footer-sub">Se retrouver & s'épanouir • Élite Butterfly Rising</div>
+  <div class="footer-divider"></div>
+  <div class="footer-butterfly">🦋</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+
+</body>
+</html>
