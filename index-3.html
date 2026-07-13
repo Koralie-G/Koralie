@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Méthode EBR by Koralie — Box Perte de Poids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="logo-ebr.png">
+<style>
+  :root{
+    --navy:#1B2A4A;
+    --navy-deep:#101c33;
+    --gold:#C9A24B;
+    --gold-light:#E4C888;
+    --rose:#D9A8A0;
+    --rose-soft:#F2DCD7;
+    --cream:#FBF6EF;
+    --ink:#2A2A2A;
+    --sage:#8A9A7E;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+  }
+  a{text-decoration:none; color:inherit;}
+
+  /* ---------- Motion path background ---------- */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Header / Hero ---------- */
+  header.hero{
+    position:relative;
+    background:linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color:var(--cream);
+    padding:5rem 1.5rem 7rem;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero-leaf{
+    position:absolute; width:280px; opacity:.15; pointer-events:none;
+  }
+  .hero-leaf.tl{top:-40px; left:-60px; transform:rotate(-15deg);}
+  .hero-leaf.br{bottom:-60px; right:-70px; transform:rotate(160deg);}
+
+  .eyebrow{
+    font-family:'Jost', sans-serif;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    font-size:.7rem;
+    color:var(--gold-light);
+    margin-bottom:1.2rem;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 7vw, 4.2rem);
+    line-height:1.05;
+    margin-bottom:1rem;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--gold-light);
+  }
+  .hero p.sub{
+    max-width:520px;
+    margin:0 auto 2.2rem;
+    font-size:1.05rem;
+    font-weight:300;
+    color:#EDEBE3;
+    line-height:1.6;
+  }
+  .hero .badges{
+    display:flex; gap:1.4rem; justify-content:center; flex-wrap:wrap;
+    font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--rose-soft);
+  }
+  .hero .badges span::before{content:"✦ "; color:var(--gold);}
+
+  .logo-mark{
+    width:min(260px, 62vw);
+    height:auto;
+    margin:0 auto 1.8rem;
+    display:block;
+    filter:drop-shadow(0 6px 18px rgba(0,0,0,.35));
+    animation:flutter 6s ease-in-out infinite;
+  }
+  @keyframes flutter{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-5px);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .logo-mark{animation:none;}
+  }
+  .footer-logo{
+    width:64px; height:auto; margin:0 auto 1rem; display:block; opacity:.9;
+  }
+
+  /* ---------- Method intro strip ---------- */
+  .method-strip{
+    background:var(--gold);
+    color:var(--navy-deep);
+    text-align:center;
+    padding:.9rem 1rem;
+    font-size:.85rem;
+    letter-spacing:.04em;
+    font-weight:500;
+  }
+
+  /* ---------- Journey section ---------- */
+  section.journey{
+    max-width:1180px;
+    margin:0 auto;
+    padding:5rem 1.5rem 2rem;
+    position:relative;
+    z-index:2;
+  }
+  .journey-head{
+    text-align:center;
+    max-width:640px;
+    margin:0 auto 3.5rem;
+  }
+  .journey-head .eyebrow{color:var(--rose); }
+  .journey-head h2{
+    font-size:clamp(2rem,4vw,2.8rem);
+    color:var(--navy);
+    margin-bottom:.8rem;
+  }
+  .journey-head p{
+    color:#5b5b5b;
+    font-size:.98rem;
+    line-height:1.6;
+  }
+
+  /* path line connecting boxes - metamorphosis journey */
+  .path-line{
+    position:absolute;
+    left:50%; top:0; bottom:0;
+    width:2px;
+    background:repeating-linear-gradient(to bottom, var(--gold) 0 6px, transparent 6px 14px);
+    transform:translateX(-50%);
+    z-index:0;
+    display:none;
+  }
+
+  .boxes-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+    gap:1.8rem;
+    position:relative;
+    z-index:1;
+  }
+
+  .box-card{
+    background:#fff;
+    border-radius:22px;
+    padding:1.9rem 1.7rem 1.7rem;
+    box-shadow:0 12px 30px -14px rgba(27,42,74,0.18);
+    border:1px solid rgba(201,162,75,0.18);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .box-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px -16px rgba(27,42,74,0.28);
+  }
+  .box-card .stage{
+    position:absolute;
+    top:-16px; left:1.7rem;
+    background:var(--navy);
+    color:var(--gold-light);
+    font-family:'Cormorant Garamond', serif;
+    font-size:1rem;
+    font-weight:600;
+    width:34px; height:34px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,.2);
+  }
+  .box-card h3{
+    color:var(--navy);
+    font-size:1.7rem;
+    margin:.6rem 0 .1rem;
+  }
+  .box-card .goal{
+    color:var(--rose);
+    font-size:.85rem;
+    font-style:italic;
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    margin-bottom:1.1rem;
+  }
+  .box-card .prod-list{
+    list-style:none;
+    font-size:.85rem;
+    color:#4a4a4a;
+    margin-bottom:1rem;
+  }
+  .box-card .prod-list li{
+    padding:.28rem 0;
+    border-bottom:1px dashed rgba(0,0,0,.08);
+    display:flex;
+    justify-content:space-between;
+    gap:.5rem;
+  }
+  .box-card .prod-list li:last-child{border-bottom:none;}
+  .box-card .prod-list li .qty{color:var(--gold); font-weight:500;}
+
+  .box-card .benefits{
+    background:var(--cream);
+    border-radius:12px;
+    padding:.8rem 1rem;
+    margin-bottom:1.2rem;
+    font-size:.8rem;
+    color:#555;
+  }
+  .box-card .benefits div{
+    padding:.2rem 0;
+  }
+  .box-card .benefits div::before{
+    content:"✓ ";
+    color:var(--sage);
+    font-weight:600;
+  }
+
+  .box-card .price-row{
+    margin-top:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:1rem;
+  }
+  .box-card .price-tag{
+    font-size:.68rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:var(--rose-soft);
+    color:#9c5b52;
+    padding:.3rem .6rem;
+    border-radius:20px;
+  }
+  .box-card .price{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.6rem;
+    font-weight:600;
+    color:var(--navy);
+  }
+  .box-card .cta{
+    display:block;
+    text-align:center;
+    background:var(--navy);
+    color:var(--cream);
+    padding:.85rem 1rem;
+    border-radius:12px;
+    font-size:.85rem;
+    letter-spacing:.04em;
+    transition:background .25s ease;
+  }
+  .box-card .cta:hover{background:var(--gold); color:var(--navy-deep);}
+
+  .box-card.featured{
+    border:1.5px solid var(--gold);
+  }
+  .box-card.featured .stage{background:var(--gold); color:var(--navy-deep);}
+
+  section.trio-cure{
+    max-width:900px;
+    margin:0 auto;
+    padding:1rem 1.5rem 5rem;
+    text-align:center;
+  }
+  .trio-cure .eyebrow{color:var(--rose);}
+  .trio-cure h2{
+    font-size:clamp(1.7rem,3.6vw,2.3rem);
+    color:var(--navy);
+    margin-bottom:1.2rem;
+  }
+  .trio-cure p{
+    color:#555;
+    font-size:.98rem;
+    line-height:1.75;
+    max-width:680px;
+    margin:0 auto 1.4rem;
+  }
+  .trio-cure .points{
+    display:flex;
+    gap:1.2rem;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:1.8rem;
+  }
+  .trio-cure .point{
+    background:#fff;
+    border:1px solid rgba(201,162,75,.25);
+    border-radius:14px;
+    padding:1.1rem 1.4rem;
+    max-width:220px;
+    font-size:.82rem;
+    color:var(--navy);
+    box-shadow:0 10px 24px -16px rgba(27,42,74,.25);
+  }
+  .trio-cure .point strong{
+    display:block;
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.5rem;
+    color:var(--gold);
+    margin-bottom:.3rem;
+  }
+
+  /* ---------- Testimonials ---------- */
+  section.testimonials{
+    max-width:1180px;
+    margin:0 auto;
+    padding:1rem 1.5rem 5rem;
+  }
+  .testimonials-head{
+    text-align:center;
+    max-width:600px;
+    margin:0 auto 3rem;
+  }
+  .testimonials-head .eyebrow{color:var(--rose);}
+  .testimonials-head h2{
+    font-size:clamp(1.8rem,4vw,2.5rem);
+    color:var(--navy);
+  }
+  .testi-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:1.8rem;
+  }
+  .testi-card{
+    background:#fff;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 12px 30px -16px rgba(27,42,74,.2);
+    border:1px solid rgba(201,162,75,.18);
+    display:flex;
+    flex-direction:column;
+  }
+  .testi-photo{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/5;
+    background:linear-gradient(135deg, var(--rose-soft), var(--cream));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .testi-photo img{
+    width:100%; height:100%; object-fit:contain; display:block;
+  }
+  .testi-photo .placeholder-icon{
+    width:48px; height:48px; color:var(--rose); opacity:.6;
+  }
+  .testi-photo .result-badge{
+    position:absolute;
+    bottom:.7rem; right:.7rem;
+    background:var(--navy);
+    color:var(--gold-light);
+    font-size:.72rem;
+    letter-spacing:.03em;
+    padding:.3rem .7rem;
+    border-radius:20px;
+  }
+  .testi-body{
+    padding:1.3rem 1.4rem 1.5rem;
+  }
+  .testi-quote{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.05rem;
+    color:var(--navy);
+    line-height:1.5;
+    margin-bottom:.8rem;
+  }
+  .testi-name{
+    font-size:.78rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--sage);
+  }
+
+  /* ---------- Guidance section ---------- */
+  section.guide{
+    background:var(--navy);
+    color:var(--cream);
+    padding:5rem 1.5rem;
+    margin-top:4rem;
+    position:relative;
+  }
+  .guide-head{
+    text-align:center;
+    max-width:600px;
+    margin:0 auto 3rem;
+  }
+  .guide-head h2{
+    font-size:clamp(1.8rem,4vw,2.4rem);
+    color:var(--gold-light);
+  }
+  .guide-grid{
+    max-width:1100px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:1.5rem;
+  }
+  .guide-card{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(201,162,75,.25);
+    border-radius:18px;
+    padding:1.8rem;
+    text-align:center;
+  }
+  .guide-card .icon{
+    width:42px; height:42px;
+    margin:0 auto 1rem;
+    color:var(--gold);
+  }
+  .guide-card h4{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.25rem;
+    color:var(--gold-light);
+    margin-bottom:.6rem;
+  }
+  .guide-card p{
+    font-size:.85rem;
+    line-height:1.6;
+    color:#D9D5C9;
+  }
+
+  /* ---------- Trust / mantra ---------- */
+  section.mantra{
+    text-align:center;
+    padding:4.5rem 1.5rem;
+  }
+  section.mantra .tags{
+    display:flex; gap:2rem; justify-content:center; flex-wrap:wrap;
+    font-size:.75rem; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--sage);
+    margin-bottom:2.2rem;
+  }
+  section.mantra .quote{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:clamp(1.3rem,3vw,1.9rem);
+    color:var(--navy);
+    max-width:700px;
+    margin:0 auto 1rem;
+    line-height:1.4;
+  }
+  section.mantra .signature{
+    font-size:.85rem;
+    color:var(--rose);
+    letter-spacing:.05em;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--navy-deep);
+    color:#B9B4A4;
+    text-align:center;
+    padding:2.6rem 1.5rem;
+    font-size:.78rem;
+  }
+  footer .links{
+    display:flex; gap:1.4rem; justify-content:center; margin-bottom:1rem;
+  }
+  footer .links a{
+    color:var(--gold-light);
+    letter-spacing:.04em;
+  }
+  footer .links a:hover{text-decoration:underline;}
+
+  @media (max-width:640px){
+    .box-card{padding:1.6rem 1.3rem 1.4rem;}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<header class="hero">
+  <svg class="hero-leaf tl" viewBox="0 0 200 200" fill="none"><path d="M10 190C60 140 40 60 120 20C90 80 110 150 10 190Z" fill="#C9A24B"/></svg>
+  <svg class="hero-leaf br" viewBox="0 0 200 200" fill="none"><path d="M10 190C60 140 40 60 120 20C90 80 110 150 10 190Z" fill="#D9A8A0"/></svg>
+
+  <img src="logo-ebr.png" alt="Élite Butterfly Rising" class="logo-mark">
+
+  <div class="eyebrow">Méthode Glow Intérieur</div>
+  <h1>La Méthode <em>EBR</em><br>by Koralie</h1>
+  <p class="sub">Coach en nutrition · -11kg après 3 enfants, sans régime.<br>Des box pensées pour chaque étape de ta transformation — à commander en toute autonomie.</p>
+  <div class="badges">
+    <span>Produits naturels</span>
+    <span>Sans engagement</span>
+    <span>Suivi personnalisé offert</span>
+  </div>
+</header>
+
+<div class="method-strip">1 BOX = 1 MOIS DE CURE — CHOISIS TON OBJECTIF, COMMANDE EN AUTONOMIE, JE M'OCCUPE DU RESTE</div>
+
+<section class="journey">
+  <div class="journey-head">
+    <div class="eyebrow">Mes box perte de poids</div>
+    <h2>Chaque femme est unique, ta box aussi</h2>
+    <p>Six étapes, du plus doux au plus complet. Commande directement la box qui correspond à ton objectif : dès réception de ta commande, je t'envoie ton e-book offert et je démarre ton accompagnement.</p>
+  </div>
+
+  <div class="boxes-grid" id="boxes-grid"></div>
+</section>
+
+<section class="trio-cure">
+  <div class="eyebrow">Un conseil de coach</div>
+  <h2>Pourquoi miser sur 3 mois de cure</h2>
+  <p>Une box, c'est un excellent premier pas. Mais ton corps a besoin de temps pour installer de nouvelles habitudes en profondeur : digestion apaisée, métabolisme relancé, silhouette qui se redessine progressivement. Sur 3 mois, les compléments agissent en continu au lieu d'un simple coup de pouce ponctuel, et c'est là que les résultats se stabilisent vraiment, sans effet yo-yo.</p>
+  <p>C'est aussi le temps qu'il te faut pour ancrer de nouveaux réflexes au quotidien, sans jamais tomber dans la restriction. Beaucoup de mes clientes commencent avec une box, puis choisissent de la renouveler sur 3 mois dès qu'elles ressentent les premiers effets.</p>
+  <div class="points">
+    <div class="point"><strong>Mois 1</strong>Le corps s'adapte, la digestion s'apaise, les premières sensations changent</div>
+    <div class="point"><strong>Mois 2</strong>Le métabolisme s'installe dans un nouveau rythme, les résultats deviennent visibles</div>
+    <div class="point"><strong>Mois 3</strong>Les habitudes se stabilisent, la silhouette se raffermit durablement</div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="testimonials-head">
+    <div class="eyebrow">Elles ont testé</div>
+    <h2>Elles témoignent</h2>
+  </div>
+  <div class="testi-grid" id="testi-grid"></div>
+</section>
+
+<section class="guide">
+  <div class="guide-head">
+    <div class="eyebrow" style="color:var(--rose)">Besoin d'aide pour choisir ?</div>
+    <h2>Comment choisir ta box</h2>
+  </div>
+  <div class="guide-grid">
+    <div class="guide-card">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2C8 6 6 10 12 22C18 10 16 6 12 2Z"/></svg>
+      <h4>Tu débutes ?</h4>
+      <p>Commence avec la Box 1 ou 2 pour habituer ton corps en douceur.</p>
+    </div>
+    <div class="guide-card">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>
+      <h4>Tu veux aller plus loin ?</h4>
+      <p>Les Box 3 et 4 sont parfaites pour une détox en profondeur et un ventre plus plat.</p>
+    </div>
+    <div class="guide-card">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3C8 6 5 9 5 13a7 7 0 0014 0c0-4-3-7-7-10Z"/></svg>
+      <h4>Résultats visibles ?</h4>
+      <p>Les Box 5 et 6 sont les plus complètes pour affiner ta silhouette et booster ton bien-être.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mantra">
+  <div class="tags">
+    <span>Naturel</span><span>Sans effort extrême</span><span>Accompagnée à chaque étape</span>
+  </div>
+  <p class="quote">"Se réveiller enfin, ce n'est pas attendre que la vie aille bien.<br>C'est devenir cette femme qu'on n'arrête plus."</p>
+  <p class="signature">— Koralie, Élite Butterfly Rising</p>
+</section>
+
+<footer>
+  <img src="logo-ebr.png" alt="Élite Butterfly Rising" class="footer-logo">
+  <div class="links">
+    <a href="#" id="ig-link">Instagram</a>
+    <a href="#" id="fb-link">Facebook</a>
+    <a href="#" id="wa-link">Écris-moi</a>
+  </div>
+  <div>Dis-moi ton objectif et je t'aide à choisir 🦋</div>
+</footer>
+
+<script>
+/* =========================================================
+   ⚠️ ZONE À MODIFIER PAR KORALIE ⚠️
+   Colle ici tes 6 liens de commande Farmasi (dans l'ordre),
+   puis tes liens Instagram / Facebook / WhatsApp.
+   Rien d'autre à toucher dans le fichier.
+   ========================================================= */
+const LIENS_COMMANDE = {
+  1: "https://www.fr.farmasi.com/gouverneurkoralie/basket?shareCartId=7a1eeb80-2fec-491e-9897-78ae9d8261da",
+  2: "https://www.fr.farmasi.com/gouverneurkoralie/basket?shareCartId=4ced4658-9a78-4062-b53c-00722ea58d60",
+  3: "https://www.fr.farmasi.com/gouverneurkoralie/basket?shareCartId=980056da-0e52-40d3-b81f-01b6ae82c3c6",
+  4: "https://www.fr.farmasi.com/gouverneurkoralie/basket?shareCartId=4afee62f-3606-4eb8-a7a5-3507691a221e",
+  5: "https://www.fr.farmasi.com/gouverneurkoralie/basket?shareCartId=6f4e433a-fff2-48ad-8fc2-bbf5d0c5903a",
+  6: "https://www.fr.farmasi.com/gouverneurkoralie/basket?shareCartId=4c35e1ab-b1e5-4410-810b-d68027708c78"
+};
+const LIENS_SOCIAUX = {
+  instagram: "https://www.instagram.com/koralie.gouverneur?igsh=azY0YzN5cGdyejVs",
+  facebook: "https://www.facebook.com/share/17w488mpmT/",
+  whatsapp: "https://wa.me/33614406707"
+};
+/* ========================================================= */
+
+document.getElementById('ig-link').href = LIENS_SOCIAUX.instagram;
+document.getElementById('fb-link').href = LIENS_SOCIAUX.facebook;
+document.getElementById('wa-link').href = LIENS_SOCIAUX.whatsapp;
+
+const BOXES = [
+  {
+    n:1, name:"Ultra Mini", goal:"Pour te sentir plus légère (pas pour perdre des kilos)",
+    price:"58,50€",
+    products:[["Sirop Aloé ventre plat","x1"],["Gummies rouge","x1"]],
+    benefits:["Soutient la digestion","Aide à réduire les ballonnements","Douceur au quotidien"]
+  },
+  {
+    n:2, name:"Mini", goal:"Perte légère (2-3kg)",
+    price:"93,50€",
+    products:[["L-Carnitine","x1"],["Sirop Aloé ventre plat","x1"],["Gummies rouge","x1"]],
+    benefits:["Booste le métabolisme","Réduit les fringales","Favorise un ventre plat"]
+  },
+  {
+    n:3, name:"Moyenne", goal:"Perte moyenne (5-6kg)",
+    price:"128,50€",
+    products:[["L-Carnitine","x2"],["Gummies rouge","x1"],["Sirop Aloé ventre plat","x1"]],
+    benefits:["Aide le corps à brûler les graisses","Énergie au quotidien","Sans régime ni sport obligatoire"]
+  },
+  {
+    n:4, name:"Ventre Plat", goal:"Perte ++ (8-10kg)",
+    price:"188,50€",
+    products:[["L-Carnitine","x2"],["Gélules Spiruline","x1"],["Boisson Aloé ventre plat","x2"],["Gummies vertes","x1"]],
+    benefits:["Détoxifie en profondeur","Dégonfle le ventre","Relance le métabolisme"]
+  },
+  {
+    n:5, name:"Complète", goal:"15kg et +", featured:true,
+    price:"239,50€",
+    products:[["L-Carnitine","x2"],["Oméga 3","x1"],["Gummies vert","x1"],["Boisson Aloé","x2"],["Gélules Spiruline","x1"],["Gel raffermissant","x1"]],
+    benefits:["Détoxification complète","Affine la silhouette","Agit sur le cortisol & le stress"]
+  },
+  {
+    n:6, name:"Perte Extrême", goal:"Résultats optimaux",
+    price:"288,00€",
+    products:[["L-Carnitine","x2"],["Gummies rouge","x1"],["Gummies vert","x1"],["Boisson Aloé ventre plat","x2"],["Gélules Spiruline","x1"],["Oméga 3","x1"],["Thé Serenity","x1"],["Gel raffermissant","x1"]],
+    benefits:["Action complète, corps & esprit","Brûle les graisses en profondeur","Sommeil, digestion & bien-être global"]
+  }
+];
+
+const grid = document.getElementById('boxes-grid');
+grid.innerHTML = BOXES.map(b => `
+  <div class="box-card ${b.featured ? 'featured' : ''}">
+    <div class="stage">${b.n}</div>
+    <h3>${b.name}</h3>
+    <div class="goal">${b.goal}</div>
+    <ul class="prod-list">
+      ${b.products.map(p => `<li><span>${p[0]}</span><span class="qty">${p[1]}</span></li>`).join('')}
+    </ul>
+    <div class="benefits">
+      ${b.benefits.map(x => `<div>${x}</div>`).join('')}
+    </div>
+    <div class="price-row">
+      <span class="price-tag">Pour 1 mois</span>
+      <span class="price">${b.price}</span>
+    </div>
+    <a class="cta" href="${LIENS_COMMANDE[b.n]}" target="_blank" rel="noopener">Je commande ma box →</a>
+  </div>
+`).join('');
+
+/* =========================================================
+   ⚠️ ZONE À MODIFIER — TÉMOIGNAGES ⚠️
+   Remplace "photo": null par le chemin de la photo une fois
+   ajoutée (ex: "temoignage-1.jpg"), et complète le
+   prénom, le résultat et la citation.
+   ========================================================= */
+const TESTIMOIGNAGES = [
+  { photo:"temoignage-1.jpg", prenom:"J.", resultat:"3 mois de cure Ventre Plat", quote:"" },
+  { photo:"temoignage-2.jpg", prenom:"A.", resultat:"2 mois de cure Complète", quote:"-6,5cm de tour de ventre en 2 mois" },
+  { photo:"temoignage-3.jpg", prenom:"A.", resultat:"2 semaines de cure Mini", quote:"" },
+  { photo:"temoignage-4.jpg", prenom:"S.", resultat:"Cure Moyenne", quote:"" },
+  { photo:"temoignage-5.jpg", prenom:"K.", resultat:"-7,8kg avec une cure 100% personnalisée", quote:"Je continue à perdre du poids petit à petit, ça commence à se voir. Je fais attention sans aucune frustration." }
+];
+/* ========================================================= */
+
+const testiGrid = document.getElementById('testi-grid');
+testiGrid.innerHTML = TESTIMOIGNAGES.map(t => `
+  <div class="testi-card">
+    <div class="testi-photo">
+      ${t.photo
+        ? `<img src="${t.photo}" alt="Avant / après ${t.prenom}">`
+        : `<svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>`
+      }
+      <span class="result-badge">${t.resultat}</span>
+    </div>
+    <div class="testi-body">
+      ${t.quote ? `<p class="testi-quote">"${t.quote}"</p>` : ``}
+      <div class="testi-name">${t.prenom}</div>
+    </div>
+  </div>
+`).join('');
+</script>
+
+</body>
+</html>
