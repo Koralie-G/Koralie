@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ton bilan personnalisé — EBR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B2A4A;
+    --gold:#C9A24B;
+    --rose:#D9A9A0;
+    --cream:#F7F2EA;
+    --sage:#8A9A7E;
+    --ink:#2E2A26;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    font-family:'Jost', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+    line-height:1.5;
+  }
+  .app{
+    width:100%;
+    max-width:440px;
+  }
+
+  /* Branche fleurie — indicateur de progression */
+  .vine-wrap{
+    height:56px;
+    margin-bottom:8px;
+    position:relative;
+  }
+  .vine{
+    width:100%; height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .vine svg{ overflow:visible; }
+  .bud{
+    opacity:0.25;
+    transform:scale(0.6);
+    transition:opacity 0.6s ease, transform 0.6s cubic-bezier(.34,1.56,.64,1);
+  }
+  .bud.bloomed{ opacity:1; transform:scale(1); }
+  .bud .petal{ fill:var(--rose); }
+  .bud.bloomed .petal{ fill:var(--gold); }
+  .bud .stem{ stroke:var(--sage); }
+
+  /* Carte */
+  .card{
+    background:var(--white);
+    border-radius:28px;
+    padding:44px 32px 36px;
+    box-shadow:0 20px 50px -20px rgba(27,42,74,0.18);
+    position:relative;
+    overflow:hidden;
+    min-height:380px;
+    display:flex;
+    flex-direction:column;
+  }
+  .badge{
+    width:40px;height:40px;
+    border-radius:50%;
+    background:var(--navy);
+    color:var(--gold);
+    font-family:'Cormorant Garamond', serif;
+    font-size:20px;
+    font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:22px;
+    flex-shrink:0;
+  }
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--rose);
+    font-style:italic;
+    font-family:'Cormorant Garamond', serif;
+    margin-bottom:10px;
+  }
+  h1,h2{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    color:var(--navy);
+    line-height:1.15;
+  }
+  h1{ font-size:32px; margin-bottom:14px; }
+  h2{ font-size:26px; margin-bottom:16px; }
+  p.sub{
+    font-size:15px;
+    color:#6b6558;
+    margin-bottom:28px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-top:auto;
+  }
+  .opt{
+    text-align:left;
+    background:var(--cream);
+    border:1.5px solid transparent;
+    border-radius:14px;
+    padding:16px 18px;
+    font-family:'Jost', sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    cursor:pointer;
+    transition:all 0.2s ease;
+  }
+  .opt:hover{ border-color:var(--gold); background:#fff; }
+  .opt:active{ transform:scale(0.98); }
+
+  .start-btn, .cta-btn{
+    background:var(--navy);
+    color:var(--white);
+    border:none;
+    border-radius:14px;
+    padding:17px 20px;
+    font-family:'Jost', sans-serif;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    width:100%;
+    margin-top:auto;
+    transition:background 0.2s ease;
+  }
+  .start-btn:hover, .cta-btn:hover{ background:#26385e; }
+
+  .result-tag{
+    display:inline-block;
+    background:var(--cream);
+    color:var(--rose);
+    border-radius:100px;
+    padding:6px 14px;
+    font-size:13px;
+    font-style:italic;
+    font-family:'Cormorant Garamond', serif;
+    margin-bottom:16px;
+    width:fit-content;
+  }
+  .price{
+    font-family:'Cormorant Garamond', serif;
+    font-size:28px;
+    color:var(--navy);
+    margin:18px 0 6px;
+  }
+  .price span{ font-size:14px; color:#8a8577; font-family:'Jost',sans-serif; }
+
+  .diag{
+    font-size:15px;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .reco{
+    font-size:15px;
+    color:var(--ink);
+    margin-bottom:20px;
+  }
+  .reco b{ color:var(--sage); }
+
+  .restart{
+    text-align:center;
+    font-size:13px;
+    color:#a09a8c;
+    margin-top:14px;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+
+  .screen{ display:none; flex-direction:column; flex:1; }
+  .screen.active{ display:flex; }
+
+  @media (prefers-reduced-motion: reduce){
+    .bud{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="vine-wrap">
+    <div class="vine" id="vine"></div>
+  </div>
+
+  <div class="card">
+
+    <!-- Intro -->
+    <div class="screen active" data-screen="intro">
+      <div class="eyebrow">Se réveiller enfin.</div>
+      <h1>Quel est ton profil ?</h1>
+      <p class="sub">Réponds à 4 questions pour découvrir la formule faite pour ton corps en ce moment — pas une formule au hasard, la tienne.</p>
+      <button class="start-btn" onclick="startQuiz()">Je commence →</button>
+    </div>
+
+    <!-- Q1 -->
+    <div class="screen" data-screen="q1">
+      <div class="badge">1</div>
+      <h2>Aujourd'hui, si tu devais choisir, tu voudrais surtout...</h2>
+      <div class="options">
+        <button class="opt" onclick="answer('q1','A')">Juste me sentir plus légère, sans forcément perdre de poids</button>
+        <button class="opt" onclick="answer('q1','B')">Perdre 2-3 kg</button>
+        <button class="opt" onclick="answer('q1','C')">Perdre 5-6 kg</button>
+        <button class="opt" onclick="answer('q1','D')">Perdre 8-10 kg</button>
+        <button class="opt" onclick="answer('q1','E')">Perdre 15 kg ou plus</button>
+        <button class="opt" onclick="answer('q1','F')">Une transformation complète — corps ET tête</button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="screen" data-screen="q2">
+      <div class="badge">2</div>
+      <h2>Ton ventre, en ce moment, c'est plutôt...</h2>
+      <div class="options">
+        <button class="opt" onclick="answer('q2','A')">Jamais de souci, tout va bien</button>
+        <button class="opt" onclick="answer('q2','B')">Parfois gonflé, surtout le soir</button>
+        <button class="opt" onclick="answer('q2','C')">Souvent gonflé, dès le matin</button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="screen" data-screen="q3">
+      <div class="badge">3</div>
+      <h2>Le soir, en général...</h2>
+      <div class="options">
+        <button class="opt" onclick="answer('q3','A')">Je m'endors sans problème, l'esprit tranquille</button>
+        <button class="opt" onclick="answer('q3','B')">J'ai du mal à décrocher, tête qui tourne</button>
+        <button class="opt" onclick="answer('q3','C')">Je dors mal ET je suis épuisée dès le réveil</button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="screen" data-screen="q4">
+      <div class="badge">4</div>
+      <h2>Dans ta journée, le vrai ennemi c'est plutôt...</h2>
+      <div class="options">
+        <button class="opt" onclick="answer('q4','A')">Rien de spécial, mon énergie est stable</button>
+        <button class="opt" onclick="answer('q4','B')">Le coup de barre de l'après-midi</button>
+        <button class="opt" onclick="answer('q4','C')">Les fringales sucrées que je ne contrôle pas</button>
+      </div>
+    </div>
+
+    <!-- Résultat -->
+    <div class="screen" data-screen="result">
+      <div class="result-tag" id="result-tier-name"></div>
+      <h2 id="result-title"></h2>
+      <p class="diag" id="result-diag"></p>
+      <p class="reco" id="result-reco"></p>
+      <div class="price" id="result-price"></div>
+      <p class="sub" style="margin-bottom:16px;">Toutes les formules restent accessibles ci-dessous, selon ton budget et ton envie.</p>
+      <a class="cta-btn" id="result-cta" href="https://koralie-g.github.io/Koralie/" target="_blank" style="text-decoration:none;display:block;text-align:center;">Voir toutes les box →</a>
+      <div class="restart" onclick="restartQuiz()">Recommencer le bilan</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const order = ['intro','q1','q2','q3','q4','result'];
+let current = 0;
+const answers = {};
+
+const tiers = {
+  1:{
+    name:"Ultra Mini",
+    title:"Ton corps ne demande pas un changement radical.",
+    diag:"Pas besoin de brûler des graisses en ce moment — ton besoin, c'est de te sentir bien dans ton ventre, digestion apaisée, sans lourdeur.",
+    reco:"→ <b>Ultra Mini</b>, pour retrouver de la légèreté au quotidien, sans pression sur la balance.",
+    price:"58,50€ <span>/ 1 mois</span>"
+  },
+  2:{
+    name:"Mini",
+    title:"Un début de transformation, à ton rythme.",
+    diag:"2-3kg, c'est exactement le format pour se relancer sans bouleverser toute ta routine ni te mettre la pression.",
+    reco:"→ <b>Mini</b>, pour booster ton métabolisme et réduire les fringales, sans y consacrer ta vie.",
+    price:"93,50€ <span>/ 1 mois</span>"
+  },
+  3:{
+    name:"Moyenne",
+    title:"Une perte visible — celle qu'on voit dans le miroir.",
+    diag:"Tu vises une vraie perte (5-6kg), le genre de résultat qui se voit dans le miroir et dans les vêtements.",
+    reco:"→ <b>Moyenne</b>, sans régime ni sport obligatoire, pour brûler les graisses tout en gardant ton énergie.",
+    price:"128,50€ <span>/ 1 mois</span>"
+  },
+  4:{
+    name:"Ventre Plat",
+    title:"Le ventre, souvent le dernier point qui résiste.",
+    diag:"8-10kg à perdre, avec un ventre qui reste sensible même quand le reste s'affine.",
+    reco:"→ <b>Ventre Plat</b>, pour détoxifier en profondeur et dégonfler, pas juste \"perdre du poids\" en général.",
+    price:"188,50€ <span>/ 1 mois</span>"
+  },
+  5:{
+    name:"Complète",
+    title:"Un vrai protocole, pas un seul produit.",
+    diag:"15kg et plus, ça demande une approche complète sur plusieurs fronts à la fois.",
+    reco:"→ <b>Complète</b> : détox, silhouette, et cortisol/stress — souvent le vrai frein caché à ce niveau-là.",
+    price:"239,50€ <span>/ 1 mois</span>"
+  },
+  6:{
+    name:"Perte Extrême",
+    title:"Ton corps est fatigué à un niveau plus profond.",
+    diag:"Ce n'est pas qu'une question de kilos — c'est le sommeil, le stress, l'épuisement qui bloquent tout le reste.",
+    reco:"→ <b>Perte Extrême</b>, la seule formule pensée pour agir sur le corps ET l'esprit en même temps — parce qu'on ne perd pas durablement du poids sur un système nerveux épuisé.",
+    price:"288,00€ <span>/ 1 mois</span>"
+  }
+};
+
+const q1map = {A:1,B:2,C:3,D:4,E:5,F:6};
+
+function buildVine(){
+  const vine = document.getElementById('vine');
+  vine.innerHTML = '';
+  for(let i=0;i<4;i++){
+    const bud = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    bud.setAttribute('width','28'); bud.setAttribute('height','40'); bud.setAttribute('viewBox','0 0 28 40');
+    bud.classList.add('bud'); bud.id = 'bud-'+i;
+    bud.innerHTML = `
+      <line class="stem" x1="14" y1="40" x2="14" y2="18" stroke-width="2" stroke-linecap="round"/>
+      <circle class="petal" cx="14" cy="10" r="8"/>
+    `;
+    vine.appendChild(bud);
+  }
+}
+buildVine();
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelector('[data-screen="'+name+'"]').classList.add('active');
+}
+
+function startQuiz(){
+  current = 1;
+  showScreen(order[current]);
+}
+
+function answer(q, val){
+  answers[q] = val;
+  const qIndex = order.indexOf(q);
+  const bud = document.getElementById('bud-'+(qIndex-1));
+  if(bud) bud.classList.add('bloomed');
+
+  if(q === 'q4'){
+    computeResult();
+    showScreen('result');
+    return;
+  }
+  current++;
+  showScreen(order[current]);
+}
+
+function computeResult(){
+  let tier = q1map[answers.q1] || 3;
+
+  // Bascule Complète <-> Perte Extrême selon le stress/sommeil (Q3)
+  if(tier === 5 && answers.q3 === 'C'){ tier = 6; }
+  if(tier === 6 && answers.q3 === 'A'){ tier = 5; }
+
+  const t = tiers[tier];
+  document.getElementById('result-tier-name').textContent = t.name;
+  document.getElementById('result-title').textContent = t.title;
+  document.getElementById('result-diag').textContent = t.diag;
+  document.getElementById('result-reco').innerHTML = t.reco;
+  document.getElementById('result-price').innerHTML = t.price;
+}
+
+function restartQuiz(){
+  current = 0;
+  for(const k in answers) delete answers[k];
+  document.querySelectorAll('.bud').forEach(b=>b.classList.remove('bloomed'));
+  showScreen('intro');
+}
+</script>
+
+</body>
+</html>
